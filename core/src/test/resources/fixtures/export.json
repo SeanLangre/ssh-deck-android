@@ -1,0 +1,64 @@
+{
+  "format": "ssh-deck-config",
+  "version": 1,
+  "servers": [
+    {
+      "host": "build.example.test",
+      "port": 22,
+      "username": "dev",
+      "key_path": "/home/dev/.ssh/id_ed25519",
+      "login_shell": true,
+      "name": "linux-box",
+      "commands": [
+        {
+          "label": "Disk",
+          "script": "disk.sh",
+          "color": "#ff0000",
+          "project": "ALL"
+        },
+        {
+          "label": "Git Pull",
+          "script": "git-pull.sh",
+          "color": "#007bff",
+          "project": "AM"
+        },
+        {
+          "label": "D\u00e9ploiement \u2713",
+          "script": "deploiement.sh",
+          "color": "#00c900",
+          "confirm": true,
+          "project": "AM"
+        },
+        {
+          "label": "Fetch build",
+          "script": "download-build.sh",
+          "color": "#666cff",
+          "project": "CC"
+        }
+      ]
+    },
+    {
+      "host": "10.0.0.5",
+      "port": 2222,
+      "username": "me",
+      "key_path": "~/.ssh/win \"key\"",
+      "login_shell": false,
+      "name": "win-pc",
+      "commands": [
+        {
+          "label": "Download APK",
+          "script": "get-apk.sh",
+          "color": "#28ceff",
+          "project": "DD"
+        }
+      ]
+    }
+  ],
+  "scripts": {
+    "_shared/git-pull.sh": "cd ~/Projects/$PROJECT && git pull\n",
+    "win-pc/DD/get-apk.sh": "#@download\nremote: C:\\Users\\me\\Builds\\Android\\app.apk\nLOCAL: ~/Downloads/app.apk\n",
+    "linux-box/_shared/download-build.sh": "#@download\n# comment line\nremote: /srv/builds/$PROJECT\nlocal: ~/Downloads/$PROJECT-build\n",
+    "linux-box/ALL/disk.sh": "  df -h  \n\n",
+    "linux-box/AM/deploiement.sh": "echo 'd\u00e9ploy\u00e9'\n./deploy.sh --prod\n"
+  }
+}

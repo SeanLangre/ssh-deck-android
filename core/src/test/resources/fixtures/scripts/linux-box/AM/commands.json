@@ -1,0 +1,13 @@
+[
+  {
+    "label": "Git Pull",
+    "script": "git-pull.sh",
+    "color": "#007bff"
+  },
+  {
+    "label": "D\u00e9ploiement \u2713",
+    "script": "deploiement.sh",
+    "color": "#00c900",
+    "confirm": true
+  }
+]

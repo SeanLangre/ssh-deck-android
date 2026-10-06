@@ -1,0 +1,7 @@
+[
+  {
+    "label": "Disk",
+    "script": "disk.sh",
+    "color": "#ff0000"
+  }
+]

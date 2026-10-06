@@ -1,0 +1,7 @@
+[
+  {
+    "label": "Download APK",
+    "script": "get-apk.sh",
+    "color": "#28ceff"
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {
+    "label": "Fetch build",
+    "script": "download-build.sh",
+    "color": "#666cff"
+  }
+]

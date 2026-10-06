@@ -1,0 +1,126 @@
+{
+  "label_to_script_name": {
+    "Git Pull": "git-pull.sh",
+    "  Build AAB ver++ ": "build-aab-ver.sh",
+    "Déploiement ✓": "d-ploiement.sh",
+    "---": ".sh",
+    "rm Library": "rm-library.sh",
+    "UPPER_case 2": "upper-case-2.sh"
+  },
+  "strip_ansi": [
+    [
+      "\u001b[1;32mgreen\u001b[0m text\r\n",
+      "green text\n"
+    ],
+    [
+      "a\n\n\n\n\nb",
+      "a\n\nb"
+    ],
+    [
+      "\u001b]0;title\u0007after",
+      "after"
+    ],
+    [
+      "\u001b(Bplain\u001b=\u001b>",
+      "plain"
+    ],
+    [
+      "\u001b[?25lhidden\u001b[?25h",
+      "hidden"
+    ]
+  ],
+  "to_sftp_path": {
+    "C:\\Users\\me\\Builds": "/C:/Users/me/Builds",
+    "d:/data": "/d:/data",
+    "/srv/x": "/srv/x",
+    "relative\\path": "relative\\path",
+    "C:": "C:"
+  },
+  "shlex_quote": [
+    [
+      "",
+      "''"
+    ],
+    [
+      "simple",
+      "simple"
+    ],
+    [
+      "with space",
+      "'with space'"
+    ],
+    [
+      "it's",
+      "'it'\"'\"'s'"
+    ],
+    [
+      "a/b-c.d_e@f%g+h=i:j,k",
+      "a/b-c.d_e@f%g+h=i:j,k"
+    ],
+    [
+      "ümlaut",
+      "'ümlaut'"
+    ],
+    [
+      "$HOME",
+      "'$HOME'"
+    ]
+  ],
+  "load_script_content": {
+    "linux-box|ALL|disk.sh": "df -h",
+    "linux-box|AM|git-pull.sh": "PROJECT=am\ncd ~/Projects/$PROJECT && git pull",
+    "linux-box|AM|deploiement.sh": "echo 'déployé'\n./deploy.sh --prod",
+    "linux-box|CC|download-build.sh": "PROJECT=cc\n#@download\n# comment line\nremote: /srv/builds/$PROJECT\nlocal: ~/Downloads/$PROJECT-build",
+    "win-pc|DD|get-apk.sh": "#@download\nremote: C:\\Users\\me\\Builds\\Android\\app.apk\nLOCAL: ~/Downloads/app.apk"
+  },
+  "parse_download_directive": [
+    [
+      "df -h",
+      null
+    ],
+    [
+      "PROJECT=am\ncd ~/Projects/$PROJECT && git pull",
+      null
+    ],
+    [
+      "echo 'déployé'\n./deploy.sh --prod",
+      null
+    ],
+    [
+      "PROJECT=cc\n#@download\n# comment line\nremote: /srv/builds/$PROJECT\nlocal: ~/Downloads/$PROJECT-build",
+      {
+        "remote": "/srv/builds/cc",
+        "local": "~/Downloads/cc-build"
+      }
+    ],
+    [
+      "#@download\nremote: C:\\Users\\me\\Builds\\Android\\app.apk\nLOCAL: ~/Downloads/app.apk",
+      {
+        "remote": "C:\\Users\\me\\Builds\\Android\\app.apk",
+        "local": "~/Downloads/app.apk"
+      }
+    ],
+    [
+      "PROJECT='my proj'\n#@download\nremote: /a/$PROJECT\nlocal: ~/x/$PROJECT",
+      {
+        "remote": "/a/my proj",
+        "local": "~/x/my proj"
+      }
+    ],
+    [
+      "#@download\nremote: /only-remote",
+      null
+    ],
+    [
+      "echo hi\n#@download\nremote: /a\nlocal: /b",
+      null
+    ],
+    [
+      "\n\n  #@download  \n  remote :  /a:b  \n local: /c\n",
+      {
+        "remote": "/a:b",
+        "local": "/c"
+      }
+    ]
+  ]
+}

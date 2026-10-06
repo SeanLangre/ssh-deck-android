@@ -1,0 +1,7 @@
+{
+  "host": "build.example.test",
+  "port": 22,
+  "username": "dev",
+  "key_path": "/home/dev/.ssh/id_ed25519",
+  "login_shell": true
+}
