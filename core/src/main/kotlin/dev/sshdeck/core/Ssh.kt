@@ -1,5 +1,6 @@
 package dev.sshdeck.core
 
+import net.schmizz.keepalive.KeepAliveProvider
 import net.schmizz.sshj.DefaultConfig
 import net.schmizz.sshj.SSHClient
 import net.schmizz.sshj.common.Buffer
@@ -109,6 +110,8 @@ class SshRunner(
     private val keyPair: () -> KeyPair,
     private val knownHosts: KnownHosts,
     private val connectTimeoutMs: Int = 15_000,
+    /** Seconds between keepalives; a server that misses 5 in a row counts as gone. 0 disables. */
+    private val keepAliveSeconds: Int = 15,
 ) {
     fun runCommand(server: Server, command: String, out: OutputSink, cancellation: Cancellation = Cancellation()) {
         val log = StrippedSink(out)
@@ -193,9 +196,14 @@ class SshRunner(
 
     private fun connect(server: Server, log: OutputSink, cancellation: Cancellation): SSHClient {
         val verifier = TofuVerifier(knownHosts) { log.emit(OutputTag.CMD, "Trusted new host key $it\n") }
-        val client = SSHClient(DefaultConfig())
+        // Keepalives stop NATs and idle firewalls from dropping a quiet run (e.g. a build that
+        // prints nothing for minutes) and detect a dead server instead of hanging forever.
+        val config = DefaultConfig().apply { keepAliveProvider = KeepAliveProvider.KEEP_ALIVE }
+        val client = SSHClient(config)
         cancellation.attach(client)
         client.connectTimeout = connectTimeoutMs
+        // Must be set before connect(), which starts the keepalive thread only if enabled.
+        client.connection.keepAlive.keepAliveInterval = keepAliveSeconds
         client.addHostKeyVerifier(verifier)
         try {
             client.connect(server.host, server.port)

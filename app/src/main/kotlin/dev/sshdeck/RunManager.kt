@@ -52,6 +52,8 @@ class RunManager(private val app: SshDeckApp) {
 
     fun find(id: Long) = runs.firstOrNull { it.id == id }
 
+    fun runningCount() = runs.count { it.status == RunStatus.RUNNING }
+
     /** Runs a quick command's script, or its download. Throws if the script file is missing. */
     fun startQuickCommand(server: Server, cmd: QuickCommand): Run {
         val content = app.store.loadScriptContent(server.name, cmd.project, cmd.script)
@@ -77,6 +79,7 @@ class RunManager(private val app: SshDeckApp) {
     private fun start(server: Server, title: String, body: (Run, OutputSink) -> Unit): Run {
         val run = Run(nextId++, server, title, System.currentTimeMillis()) { start(server, title, body) }
         runs += run
+        RunService.sync(app, runningCount())
         var lastTag: OutputTag? = null
         val sink = OutputSink { tag, text ->
             lastTag = tag
@@ -89,7 +92,10 @@ class RunManager(private val app: SshDeckApp) {
                 lastTag == OutputTag.ERROR -> RunStatus.FAILED
                 else -> RunStatus.SUCCEEDED
             }
-            main.post { run.status = status }
+            main.post {
+                run.status = status
+                RunService.sync(app, runningCount())
+            }
         }
         return run
     }
