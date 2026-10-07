@@ -17,14 +17,13 @@ import java.io.File
 import java.io.OutputStream
 import java.security.KeyPair
 import java.security.KeyPairGenerator
-import java.security.spec.ECGenParameterSpec
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 
 /** Runs SshRunner against a real (embedded) SSH server with exec and SFTP. */
 class SshRunnerTest {
     @get:Rule val tmp = TemporaryFolder()
 
-    private val clientKey: KeyPair = KeyPairGenerator.getInstance("EC")
-        .apply { initialize(ECGenParameterSpec("secp256r1")) }.generateKeyPair()
+    private val clientKey: KeyPair = KeyPairGenerator.getInstance("Ed25519", BouncyCastleProvider()).generateKeyPair()
     private lateinit var sshd: SshServer
     private lateinit var sftpRoot: File
     private val hosts = object : KnownHosts {

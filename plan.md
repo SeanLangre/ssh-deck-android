@@ -30,7 +30,7 @@ Android port of the desktop SSH Deck (Python/Tkinter/Paramiko), in Kotlin and Je
 
 ## Android-specific decisions
 
-1. **Auth:** key-only, as on the desktop. The app generates an ECDSA key on the phone, encrypted with the Android Keystore. The user adds the shown public key to `authorized_keys` on each server. The `key_path` from an imported config is ignored. No password auth.
+1. **Auth:** key-only, as on the desktop. The app generates an Ed25519 key on the phone, encrypted with the Android Keystore. The user adds the shown public key to `authorized_keys` on each server. The `key_path` from an imported config is ignored. No password auth.
 2. **Host keys:** trust on first use. A changed key is refused until the user confirms.
 3. **Downloads:** `#@download` scripts save into the phone's `Download/` folder under the last segment of their `local:` path.
 4. **Output:** each run gets its own full-screen output screen. Runs keep going while the user navigates and are listed under Recent runs.

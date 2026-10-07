@@ -9,7 +9,6 @@ import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.KeyStore
-import java.security.spec.ECGenParameterSpec
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import javax.crypto.Cipher
@@ -18,13 +17,19 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
 /**
- * This device's SSH identity: an ECDSA P-256 key pair generated on the phone, used for
+ * This device's SSH identity: an Ed25519 key pair generated on the phone, used for
  * every server. The private key file is encrypted with an AES key that lives in the
  * Android Keystore, so the file alone is useless off the device.
  */
 class DeviceKey(context: Context) {
-    private val privateFile = File(context.filesDir, "id_ecdsa.enc")
-    private val publicFile = File(context.filesDir, "id_ecdsa.pub.der")
+    private val privateFile = File(context.filesDir, "id_ed25519.enc")
+    private val publicFile = File(context.filesDir, "id_ed25519.pub.der")
+
+    init {
+        // Earlier builds used ECDSA P-256, which servers limited to ed25519 reject.
+        File(context.filesDir, "id_ecdsa.enc").delete()
+        File(context.filesDir, "id_ecdsa.pub.der").delete()
+    }
 
     @Volatile private var cached: KeyPair? = null
 
@@ -40,9 +45,7 @@ class DeviceKey(context: Context) {
     fun authorizedKeysLine(): String = authorizedKeysLine(keyPair().public, "ssh-deck@android")
 
     private fun generate(): KeyPair {
-        val pair = KeyPairGenerator.getInstance("EC")
-            .apply { initialize(ECGenParameterSpec("secp256r1")) }
-            .generateKeyPair()
+        val pair = KeyPairGenerator.getInstance("Ed25519").generateKeyPair()
         val cipher = Cipher.getInstance(AES_MODE)
         cipher.init(Cipher.ENCRYPT_MODE, wrappingKey())
         val encrypted = cipher.doFinal(pair.private.encoded)
@@ -58,7 +61,7 @@ class DeviceKey(context: Context) {
         val cipher = Cipher.getInstance(AES_MODE)
         cipher.init(Cipher.DECRYPT_MODE, wrappingKey(), GCMParameterSpec(128, iv))
         val privateBytes = cipher.doFinal(data, 1 + ivLength, data.size - 1 - ivLength)
-        val factory = KeyFactory.getInstance("EC")
+        val factory = KeyFactory.getInstance("Ed25519")
         return KeyPair(
             factory.generatePublic(X509EncodedKeySpec(publicFile.readBytes())),
             factory.generatePrivate(PKCS8EncodedKeySpec(privateBytes)),
