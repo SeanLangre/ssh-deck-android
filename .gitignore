@@ -5,3 +5,11 @@ local.properties
 *.iml
 .kotlin/
 captures/
+bin/
+*.jks
+*.keystore
+*.apk
+*.aab
+.project
+.classpath
+.settings/

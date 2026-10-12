@@ -1,7 +1,6 @@
 # ssh-deck-android
 
-Android port of the desktop SSH Deck (Python/Tkinter/Paramiko), in Kotlin and Jetpack Compose. See `plan.md` for the roadmap.
-
+Android port of the desktop SSH Deck (Python/Tkinter/Paramiko), in Kotlin and Jetpack Compose.
 ## Using it
 
 1. **Import** a config: Copy Config on the desktop, then Import on the phone (or load the exported `.json` file).
@@ -26,6 +25,23 @@ Host keys are trusted on first connect, like the desktop does. A changed key is 
 ```
 
 The app keeps the desktop's `scripts/` layout in its private storage (`filesDir/scripts`). `server.json` and `commands.json` are written byte-for-byte like the desktop writes them, and the Copy Config JSON works in both directions.
+
+## Prerequisites and packages
+
+- **Android SDK** with platform 36 (`minSdk` 26, `targetSdk` 36), plus `adb` to install on a device.
+- **JDK 25** for Gradle, downloaded automatically on first run. The code itself compiles to Java 17.
+- **Gradle 9.8** via the included wrapper, so nothing to install. Android Gradle Plugin 9.4 and Kotlin 2.4.
+- **Python 3** with the desktop app's dependencies, only needed to regenerate the test fixtures.
+
+Main libraries (versions in `gradle/libs.versions.toml`):
+
+| Package | Used for |
+|---------|----------|
+| Jetpack Compose (Material 3) | UI |
+| sshj + BouncyCastle | SSH exec and SFTP, Ed25519 keys |
+| kotlinx-serialization-json | Config import/export |
+| kotlinx-coroutines | Background runs and output streaming |
+| Apache MINA sshd (tests only) | Embedded SSH server for tests |
 
 ## Build and test
 
