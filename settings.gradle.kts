@@ -24,5 +24,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ssh-deck"
+rootProject.name = "ssh-deck-android"
 include(":core", ":app")
