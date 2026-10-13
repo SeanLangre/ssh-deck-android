@@ -1,11 +1,12 @@
 # ssh-deck-android
 
-Android port of the desktop SSH Deck (Python/Tkinter/Paramiko), in Kotlin and Jetpack Compose.
+Android port of the desktop [SSH Deck](https://github.com/SeanLangre/ssh-deck) (Python/Tkinter/Paramiko), in Kotlin and Jetpack Compose.
+
 ## Using it
 
 1. **Import** a config: Copy Config on the desktop, then Import on the phone (or load the exported `.json` file).
 2. **Device key**: the app logs in with an Ed25519 key generated on the phone (its private key is encrypted with the Android Keystore and never leaves the device). Add the shown line to `~/.ssh/authorized_keys` on each server. On Windows, admin accounts use `C:\ProgramData\ssh\administrators_authorized_keys`.
-3. Tap a server to open its deck, then tap a command button. Each run gets its own output screen; runs keep going while you navigate and show under **Recent runs**.
+3. Tap a server to open its deck, then tap a command button. Each run gets its own output screen; runs keep going while you navigate and show under **Recent runs**. They also continue when the app is backgrounded or the screen locks: a foreground service keeps the connection alive and shows a notification while commands are running. On Android 13+ the app asks for notification permission at launch; runs work without it, you just won't see the notification.
 
 Host keys are trusted on first connect, like the desktop does. A changed key is refused until you confirm it. `#@download` scripts save into the phone's `Download/` folder under the last part of their `local:` path, so `~/Downloads/android-build` becomes `Download/android-build/`.
 

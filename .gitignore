@@ -13,3 +13,37 @@ bin/
 .project
 .classpath
 .settings/
+
+# Signing / credentials
+keystore.properties
+*.p12
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+id_ecdsa*
+.env
+.env.*
+google-services.json
+
+# Native build / profiling / crash dumps
+.externalNativeBuild/
+.cxx/
+*.hprof
+*.log
+hs_err_pid*
+
+# Python (tools/)
+__pycache__/
+*.pyc
+.venv/
+
+# Editors / OS
+.vscode/
+.fleet/
+.DS_Store
+Thumbs.db
+
+# Local AI tooling
+.claude/
+.ai-debug/
