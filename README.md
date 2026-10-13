@@ -4,6 +4,8 @@ Android port of the desktop [SSH Deck](https://github.com/SeanLangre/ssh-deck) (
 
 **Requires the desktop [SSH Deck](https://github.com/SeanLangre/ssh-deck) (Windows/Linux).** The phone app only runs commands; servers, commands and scripts are created and edited in the desktop app and imported from there.
 
+<img src="ssh-deck-android.png" alt="A server's deck: colored command buttons grouped by project" width="300">
+
 ## Using it
 
 1. **Import** a config: Copy Config on the desktop, then Import on the phone (or load the exported `.json` file).
