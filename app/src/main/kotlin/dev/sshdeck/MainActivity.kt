@@ -73,7 +73,18 @@ private fun SshDeckUi(app: SshDeckApp) {
         )
         is Screen.Deck -> {
             val server = loaded.servers.firstOrNull { it.name == screen.serverName }
-            if (server == null) pop() else DeckScreen(server, app.runs, onBack = ::pop, onOpenRun = ::openRun)
+            if (server == null) {
+                pop()
+            } else {
+                DeckScreen(
+                    server, app.runs, onBack = ::pop, onOpenRun = ::openRun,
+                    onSaveServer = { updated ->
+                        // Name is unchanged, so this rewrites server.json in place.
+                        app.store.saveServer(updated)
+                        loaded = app.store.loadServers()
+                    },
+                )
+            }
         }
         is Screen.RunOutput -> {
             val run = app.runs.find(screen.runId)

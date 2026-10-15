@@ -56,11 +56,14 @@ fun DeckScreen(
     runs: RunManager,
     onBack: () -> Unit,
     onOpenRun: (Run) -> Unit,
+    /** Persists edited connection details; throws if saving fails. */
+    onSaveServer: (Server) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val snackbar = remember { SnackbarHostState() }
     var command by remember { mutableStateOf("") }
     var pending by remember { mutableStateOf<QuickCommand?>(null) }
+    var editing by remember { mutableStateOf(false) }
 
     fun runQuick(cmd: QuickCommand) {
         try {
@@ -75,6 +78,18 @@ fun DeckScreen(
         if (text.isEmpty()) return
         command = ""
         onOpenRun(runs.startCommand(server, text))
+    }
+
+    if (editing) {
+        ServerEditDialog(
+            server,
+            onDismiss = { editing = false },
+            onSave = { updated ->
+                editing = false
+                val error = runCatching { onSaveServer(updated) }.exceptionOrNull()
+                scope.launch { snackbar.showSnackbar(error?.let { "Save failed: ${it.message}" } ?: "Saved.") }
+            },
+        )
     }
 
     pending?.let { cmd ->
@@ -104,6 +119,7 @@ fun DeckScreen(
                     }
                 },
                 navigationIcon = { TextButton(onClick = onBack) { Text("Back") } },
+                actions = { TextButton(onClick = { editing = true }) { Text("Edit") } },
             )
         },
         snackbarHost = { SnackbarHost(snackbar) },

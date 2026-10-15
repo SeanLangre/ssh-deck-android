@@ -8,7 +8,7 @@
 - [ ] Tablet two-pane layout.
 
 ## Non-goals
-- Server, command and script editing (the desktop app owns the config; the phone only imports and runs it).
+- Command and script editing (the desktop app owns them; the phone can only edit a server's host, port and username).
 - Password auth (key-only).
 - Embedded terminal (the SSH Terminal button hands off to another app).
 - Automatic config sync (re-import when the desktop config changes).
